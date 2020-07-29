@@ -26,8 +26,18 @@ public class Mosquito : MonoBehaviour
         Movement();
     }
 
-    public void Init(Vector2 target, float speed, Vector3 position, int index)
+    public void Init(Vector2 target, float speed, Vector3 position, int index, bool fromRight)
     {
+        if (fromRight)
+        {
+            GetComponent<SpriteRenderer>().flipX = true;
+            transform.eulerAngles = Vector3.forward * 45;
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().flipX = false;
+            transform.eulerAngles = Vector3.forward * -45;
+        }
         _target = target;
         this.speed = speed;
         transform.position = position;

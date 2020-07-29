@@ -58,9 +58,15 @@ public class MosquitoSpawner : MonoBehaviour
         var mq = mosquitoes[idx];
         mq.active = true;
         Vector3 pos = transform.position + Random.Range(-5, 5) * Vector3.up;
+
+        bool fromRight = false;
         if (Random.Range(-1, 2) > 0)
+        {
             pos *= -1;
-        mq.GetComponent<Mosquito>().Init(Human.Instance.Position, speed, pos, idx);
+            fromRight = true;
+        }
+            
+        mq.GetComponent<Mosquito>().Init(Human.Instance.Position, speed, pos, idx, fromRight);
         speed = Mathf.Min(speed + 0.2f, 10f);
     }
 
