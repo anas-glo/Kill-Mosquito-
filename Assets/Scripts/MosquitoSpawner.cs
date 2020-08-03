@@ -28,7 +28,7 @@ public class MosquitoSpawner : MonoBehaviour
         {
             var mq = Instantiate(mosquito) as GameObject;
             mq.GetComponent<Mosquito>().onDead = BackToPull;
-            mq.active = false;
+            mq.SetActive(false);
             mosquitoes.Add(mq);
             mq.transform.SetParent(transform);
             indexMosquitoes.Enqueue(i);
@@ -56,7 +56,7 @@ public class MosquitoSpawner : MonoBehaviour
     {
         int idx = indexMosquitoes.Dequeue();
         var mq = mosquitoes[idx];
-        mq.active = true;
+        mq.SetActive(true);
         Vector3 pos = transform.position + Random.Range(-5, 5) * Vector3.up;
 
         bool fromRight = false;
@@ -73,7 +73,7 @@ public class MosquitoSpawner : MonoBehaviour
     public void BackToPull(int index)
     {
         spawnTime = Mathf.Max(spawnTime - 0.1f, 1f);
-        mosquitoes[index].active = false;
+        mosquitoes[index].SetActive(false);
         indexMosquitoes.Enqueue(index);
     }
 
@@ -84,7 +84,7 @@ public class MosquitoSpawner : MonoBehaviour
         for (int i = 0; i < mosquitoes.Count; i++)
         {
             indexMosquitoes.Enqueue(i);
-            mosquitoes[i].active = false;
+            mosquitoes[i].SetActive(false);
         }
     }
 

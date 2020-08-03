@@ -8,9 +8,12 @@ public class Mosquito : MonoBehaviour
     [SerializeField]
     private GameObject deadObject;
 
-    private Vector2 _target;
+    private Vector2 PeoplePosition;
     private int idx;
     float speed;
+    float timeNextMove;
+    Vector2 target;
+    const float TimeMove = 0.2f;
 
     private int currentSorting;
     bool isDeath = true;
@@ -38,7 +41,7 @@ public class Mosquito : MonoBehaviour
             GetComponent<SpriteRenderer>().flipX = false;
             transform.eulerAngles = Vector3.forward * -45;
         }
-        _target = target;
+        PeoplePosition = target;
         this.speed = speed;
         transform.position = position;
 
@@ -48,20 +51,36 @@ public class Mosquito : MonoBehaviour
 
         GetComponent<SpriteRenderer>().sortingOrder = currentSorting;
         deadObject.GetComponent<SpriteRenderer>().sortingOrder = currentSorting + 1;
+        timeNextMove = TimeMove;
     }
 
     public void Movement()
     {
         if (isDeath)
             return;
-        Vector2 move = Vector2.Lerp(transform.position, _target, 0.1f * Time.deltaTime * speed);
-        transform.position = move;
+        if(timeNextMove < TimeMove)
+        {
+            Move();
+        }
+        else
+        {
+            timeNextMove = 0;
+            target = MovementBehaviour.Instance.NextMovement(transform.position, PeoplePosition);
+        }
     }
+
+    public void Move()
+    {
+        Vector2 move = Vector2.Lerp(transform.position, target, 0.1f * Time.deltaTime * speed);
+        transform.position = move;
+        timeNextMove += 0.1f * Time.deltaTime * speed;
+    }
+
 
     public void Dead()
     {
         isDeath = true;
-        deadObject.active = true;
+        deadObject.SetActive(true);
 
         gameObject.GetComponent<Collider2D>().enabled = false;
         GetComponent<SpriteRenderer>().sortingOrder = currentSorting - 1;
@@ -73,7 +92,7 @@ public class Mosquito : MonoBehaviour
     IEnumerator BackToPull()
     {
         yield return new WaitForSeconds(2f);
-        deadObject.active = false;
+        deadObject.SetActive(false);
         onDead(idx);
     }
 
@@ -84,7 +103,7 @@ public class Mosquito : MonoBehaviour
 
     private void OnDisable()
     {
-        deadObject.active = false;
+        deadObject.SetActive(false);
     }
 
     //private void OnMouseDrag()

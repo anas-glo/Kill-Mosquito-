@@ -36,6 +36,6 @@ public class UIGame : MonoBehaviour
     public void onGameOver()
     {
         status.text = "Game Over";
-        panel.active = true;
+        panel.SetActive(true);
     }
 }
